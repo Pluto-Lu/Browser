@@ -1,5 +1,5 @@
 unmap j k d a q gf x h gl gp P p m W S z J K
-let scrollstep = 180
+let scrollstep = 181
 set nosmoothscroll
 "set smoothscroll
 "let scrollduration = 250
