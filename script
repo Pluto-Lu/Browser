@@ -1,0 +1,701 @@
+unmap j k d a q gf x h gl gp P p m W S z J K
+let scrollstep = 180
+set nosmoothscroll
+"set smoothscroll
+"let scrollduration = 250
+let hintcharacters = "qweasdzxcrf1234v5tg"
+let nextmatchpattern = "((?!first)(next|older|>|›|»|下(一)?(頁|則|篇|页)( »)?|forward| )+)"
+let previousmatchpattern = "((?!last)(prev(ious)?|newer|back|«|上(一)?(頁|則|篇|页)|less|<|‹| )+)"
+map z previousMatchPattern
+map x nextMatchPattern
+set sortlinkhints
+map d scrollDown
+map a scrollUp
+map W scrollToTop
+map S scrollToBottom
+map D nextTab
+map A previousTab
+map q closeTab
+map Q lastClosedTab
+map k previousMatchPattern
+map j nextMatchPattern
+map gs :tabnew chrome://settings<CR>
+map gf :tabnew chrome://flags<CR>
+map gi :tabnew https://www.inoreader.com/<CR>
+map f createTabbedHint
+map F createHint
+map gp reverseImage
+map gl multiYankUrl
+map u yankDocumentUrl
+map m muteTab
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+site '*://wetv.vip/*' {
+unmap 1 w d a A j k - + = _
+getblob-> {{
+var video= document.getElementsByClassName("captioned");
+//alert(video[0].src);
+//let files = new window.File([video[0].src], "test", {type: file.type})
+var blob = new Blob(["Hello, world!"], { type: 'text/plain' });
+var blobUrl = URL.createObjectURL(blob);
+//alert(blobUrl );
+var xhr = new XMLHttpRequest;
+xhr.responseType = 'blob';
+xhr.onload = function() {
+   var recoveredBlob = xhr.response;
+   var reader = new FileReader;
+   reader.onload = function() {
+     var blobAsDataUrl = reader.result;
+     window.location = blobAsDataUrl;
+alert(blobAsDataUrl );
+   };
+   reader.readAsDataURL(recoveredBlob);
+};
+xhr.open('GET', blobUrl);
+xhr.send();
+}}
+getsubstr-> {{
+var divs = document.getElementsByTagName("txptrack");
+for(var i = 0; i < divs.length; i++){
+   if(divs[i].getAttribute("label").indexOf("中文(繁體)") == 0 ){
+      window.open(divs[i].getAttribute("src"));
+   }
+}
+var fhd = 0;
+var current_quality= document.getElementsByClassName("txp_menuitem txp_current");
+for(var i = 0; i < current_quality.length; i++){
+   if(current_quality[i].innerText.indexOf("藍光") > -1 ){
+      fhd = 1;
+   }
+}
+document.getElementsByClassName("txp_btn txp_btn_play")[0].click(); 
+if (fhd == 0){
+   var quality= document.getElementsByClassName("txp_menuitem");
+   for(var i = 0; i < quality.length; i++){
+       if(quality[i].innerText.indexOf("藍光") > -1 ){
+           quality[i].click();
+alert ("自動切換畫質為藍光，請檢查複製的連結是否為藍光格式");
+      }
+    }
+}
+var title = document.getElementsByClassName("play_right_title nowrap");
+//alert(title[0].innerHTML);
+var ep = document.getElementsByClassName("video_current");
+//alert(ep.length)
+//alert(ep[0].innerText);
+ep_str=""
+//video_episode flex_center 
+if (ep.length > 0){
+ep_str = ep[0].innerText;
+}
+else
+{
+//var ep = document.getElementsByClassName("video-mov-item flex video_current");
+}
+var copytext=title[0].innerHTML + "," + ep_str
+//alert(copytext);
+window.Clipboard.copy(copytext);
+}}
+map - :call getsubstr<CR>
+map 4 :call getsubstr<CR>
+map = :call getblob<CR>
+}
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+site '*://*.inoreader.com/*' {
+unmap d a A j k - + = _
+expendPage(isFirseRun) -> {{
+splitter.style.minHeight = '693px';
+tree_pane.style.minHeight = '693px';
+reader_pane.style.minHeight = '693px';
+three_way_contents.style.minHeight = '693px';
+if (subscriptions_buttons.style.display=="none" && isFirseRun==0){ 
+  subscriptions_buttons.style.display= ""; }
+else { subscriptions_buttons.style.display = "none"; }
+////////////////////////////////////////////////////////////////
+var script = document.createElement("script");
+//script.innerHTML = "function gestapo(ad_id) {adb_not_detected(); gestapo_notified = true;}";
+script.innerHTML = "user_registered_since=0;function gestapo(ad_id) {current_raid = 1000;user_registered_since=0; }function adb_detected(code, force){}";
+document.head.appendChild(script);
+//try { article_dialog.style.maxHeight= '650px';   article_dialog.style.height = '650px'; } catch (e) {}   // 改文章高度吧 已不需要
+try { var tempValueEn=document.getElementById("tempValueEn"); 
+if (tempValueEn == null) {
+	SizePicBasic();
+	var input= document.createElement("input"); 
+	input.type = 'text'; 
+	input.id = 'tempValueEn'; 
+	document.body.prepend(input); 
+        document.getElementById("tempValueEn").style.display="none";
+	tempValueEn=document.getElementById("tempValueEn");
+        SizePic("90px","110px","70px","110px");
+        tempValueEn.value = 'M';
+	}
+} catch (e) {
+}
+if (isFirseRun==1){
+document.body.onclick = function(e) {  
+var sitem= document.getElementsByClassName("parent_div_inner_selected");
+   if(sitem[0].innerText.indexOf("500px") > -1){
+      if (tempValueEn.value != 'L') { SizePic("120px","170px","100px","170px");  tempValueEn.value = 'L';}
+    }else if (sitem[0].innerText.indexOf("Solidot") > -1 ){
+      if (tempValueEn.value != 'S')    { SizePic("75px","75px","60px","75px"); tempValueEn.value = 'S';}
+    }else if (tempValueEn.value != 'M'){ SizePic("90px","110px","70px","110px"); tempValueEn.value = 'M';}
+}
+}
+var sitem= document.getElementsByClassName("parent_div_inner_selected");
+   if(sitem[0].innerText.indexOf("500px") > -1){
+      if (tempValueEn.value != 'L') { SizePic("120px","170px","100px","170px");  tempValueEn.value = 'L';}
+ //     if (tree_pane.style.left == '0px') { sb_tp_dock.click();}
+    }else if (sitem[0].innerText.indexOf("Solidot") > -1 ){
+      if (tempValueEn.value != 'S')    { SizePic("75px","75px","60px","75px"); tempValueEn.value = 'S';}
+ //     if (tree_pane.style.left != '0px') { sb_tp_dock.click();}
+    }else if (tempValueEn.value != 'M'){
+      SizePic("90px","110px","70px","110px");
+      tempValueEn.value = 'M';
+ //     if (tree_pane.style.left == '-190px') { sb_tp_dock.click();}
+ //     if (tree_pane.style.left == null) { sb_tp_dock.click();}
+     }
+function SizePicBasic()
+{
+	    var styleEl = document.createElement('style'), styleSheet;
+            document.head.appendChild(styleEl);
+            styleSheet = styleEl.sheet;
+            styleSheet.insertRule(".article_header_pane_left {float: right}", 0);
+            styleSheet.insertRule(".arrow_div_lower {position: relative; float: left}", 0);
+            styleSheet.insertRule(".column_view_thumbnail {background-position: 50% 30%; float: right}", 0);
+            styleSheet.insertRule(".article_feed_title {display: none;}", 0);
+}
+function SizePic(hh,ww,tt,rr)
+{
+    var styleEl = document.createElement('style'), styleSheet;
+            document.head.appendChild(styleEl);
+            styleSheet = styleEl.sheet;
+            styleSheet.insertRule(".column_view_thumbnail {height: " + hh +"; width: " + ww + "}", 0);
+            styleSheet.insertRule(".column_view_thumbnail_wrapper {height: " + hh +"; width: " + ww +"}", 0);
+            styleSheet.insertRule(".arrow_div {top: " + tt +"; right: " + rr +";}", 0);
+}
+}}
+map 1 :call expendPage(0)<CR>
+map 2 :call expendPage(1)<CR>
+call expendPage(1)
+call changeScrollColor(100)
+}
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+site '*://*socialblade.com/*' {
+clearBanner -> {{
+var divs = document.getElementsByTagName("div");
+for(var i = 0; i < divs.length; i++){
+   if(divs[i].innerHTML.indexOf("Hello, visitor! Please consider") == 0 || divs[i].innerHTML.indexOf("HELLO, VISITOR! PLEASE CONSIDER") == 0){
+         s=divs[i].parentNode.parentNode.parentNode.parentNode;
+         if (s.clientHeight <305 )            {   s.style.display="none";   }
+         if (s.parentNode.clientHeight <305) {   s.parentNode.style.display="none";  }
+   }
+}
+}}
+map 1 :call clearBanner <CR>
+call clearBanner 
+}
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+site '*://*www.cwb.gov.tw/*' {
+expendText(hh)-> {{
+//async function demo() {
+//  while (document.readyState != "complete"){
+//  await sleep(500);
+//}
+//}
+//async function sleep(ms = 0) {
+//return new Promise(r => setTimeout(r, ms));
+//}
+//demo();
+if (ftext.style.height == hh)
+{    hh = "110px";  }
+ftext.style.height = hh;
+}}
+map 1 :call expendText("280px")<CR>
+map 2 :call expendText("500px")<CR>
+"call expendText("280px")
+}
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+site '*://*.youtube.com/*' {
+expendPage1(isFirseRun) -> {{
+var prep="";
+var counts= new Boolean(false);
+demo();
+if ( isFirseRun==1){
+window.onresize = function(){
+     if(prep=="none") {  demo("none","0px"); }
+}
+}
+var setfun=function(disp1,height){
+    s=document.getElementById("tabs-container");      if(s){ s.style.height=height; } 
+    s=document.getElementById("masthead");            if(s){ s.style.display=disp1; }
+    s=document.getElementById("channel-container");   if(s){ s.style.display=disp1; }
+    s=document.getElementById("masthead");            if(s){ s.style.display=disp1; }
+    s=document.getElementById("contentContainer");    if(s){ s.style.height=height; }
+}
+async function demo(disp2,height2) {
+  while (document.readyState != "complete"){
+//alert(document.readyState);
+  await sleep(500);
+}
+if ( isFirseRun==1){await sleep(600);}
+//alert(document.readyState);
+setfun(disp2,height2);
+}
+async function sleep(ms = 0) {
+return new Promise(r => setTimeout(r, ms));
+}
+var scrollFunc=function(e){ 
+  e=e || window.event; 
+  if(e.wheelDelta && event.ctrlKey){ 
+    s=document.getElementById("masthead");
+    counts= counts?0:1;
+    if (!counts) {prep=s.style.display;}
+    if (prep=="none") { setfun("",""); }
+ }  }
+ window.onmousewheel=document.onmousewheel=scrollFunc;
+if (masthead.style.display=="none"){  
+     dispstr= "";disheight=""; 
+} 
+else {
+     dispstr="none";disheight="0px";
+}
+demo(dispstr,disheight);
+}}
+expendPage2 -> {{
+demo();
+async function demo() {
+  while (document.readyState != "complete"){
+//alert(document.readyState);
+  await sleep(500);
+}
+if (document.getElementsByClassName("style-scope yt-icon-button")[1].getAttribute("aria-pressed") == "true")
+s=document.getElementById("guide-icon").click();
+if (document.styleSheets[0].cssRules[0].style.cssText != "box-shadow: rgb(50, 50, 50) 20px 0px 0px inset;")
+{
+   document.styleSheets[0].insertRule('::-webkit-scrollbar {overflow:visible;}',0);
+   document.styleSheets[0].insertRule('::-webkit-scrollbar-thumb {box-shadow:inset 20px 0 0 rgba(100,100,100,1);',0);
+   document.styleSheets[0].insertRule('::-webkit-scrollbar {box-shadow:inset 20px 0 0 rgba(50,50,50,1);}',0);
+}
+  while (!document.getElementById("material-tabs")){
+//alert(document.readyState);
+  await sleep(500);
+}
+s=document.getElementById("material-tabs");    if(s){ s.style.height="23px"; }
+s=document.getElementById("tab1-tab");    if(s){ s.style.height="30px"; s.style.padding = "0px 0px";}
+s=document.getElementById("tab2-tab");    if(s){ s.style.height="30px"; s.style.padding = "0px 0px";}
+s=document.getElementById("tab3-tab");    if(s){ s.style.height="30px"; s.style.padding = "0px 0px";}
+s=document.getElementById("tab4-tab");    if(s){ s.style.height="30px"; s.style.padding = "0px 0px";}
+s=document.getElementsByClassName("tab-content");    if(s){ s[0].style.height="700px"; s[0].style.minHeight="700px";}
+}
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+}}
+map 1 :call expendPage1(0)<CR>
+map 2 :call expendPage2<CR>
+map 3 :call changeScrollColor(100)<CR>
+call changeScrollColor(100)
+call expendPage2
+"call expendPage1(1)
+}
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+site '*://*500px.com*/*' {
+expandPage -> {{
+var s=document.getElementsByClassName("photographer_mode px_topnav"); 
+if (s[0].style.display=="none"){  dispstr= "" } else {dispstr = "none";}
+s=document.getElementsByClassName("photographer_mode px_topnav fixed"); if(s.length >0){ s[0].style.display=dispstr; }
+s=document.getElementsByClassName("tabs_wrapper fix_width_on_modal");   if(s.length >0){ s[0].style.display=dispstr; }
+s=document.getElementsByClassName("sticky_ui fix_width_on_modal");      if(s.length >0){ s[0].style.display=dispstr; }
+s=document.getElementsByClassName("photographer_mode px_topnav");       if(s.length >0){ s[0].style.display=dispstr; }
+s=document.getElementsByClassName("px_topnav__wrapper");                if(s.length >0){ s[0].style.display=dispstr; }
+}}
+countphotos_auto()-> {{
+// change scroll color
+   document.styleSheets[0].insertRule('::-webkit-scrollbar {overflow:visible;}',0);
+   document.styleSheets[0].insertRule('::-webkit-scrollbar-thumb {box-shadow:inset 20px 0 0 rgba(100,100,100,1);',0);
+   document.styleSheets[0].insertRule('::-webkit-scrollbar {box-shadow:inset 20px 0 0 rgba(50,50,50,1);}',0);
+cc=document.getElementsByClassName("counterBoard");
+if (cc.length == 0) {
+   var div1 = document.createElement('div');
+   div1.id = 'counterBoard';
+   div1.className = 'counterBoard';
+   div1.style.position= 'fixed';
+   div1.style.right = '10px';
+   div1.style.bottom= '10px';
+   div1.style.fontSize = '12px';
+   div1.style.zIndex = '20';
+   div1.style.background = 'rgba(20, 20, 20, 0.5)';
+   div1.innerHTML = '50/====';
+   document.body.appendChild(div1);
+   }
+var delFrom=0;
+var countTXT="";
+var divhight="0";
+var pre_divhight="";
+setInterval(function(){ 
+if (countTXT==""){
+   s=document.getElementsByClassName("count");
+   if (s.length > 0) {
+     countTXT="/"+s[0].innerHTML;
+   }else{ 
+      s=document.getElementsByClassName("sticky_ui__photo_count");  
+      if (s.length > 0) {
+         countTXT="/"+s[0].innerHTML.replace(" photos",""); 
+      }
+   }
+}
+   if (divhight != pre_divhight) {
+      divhight =  document.getElementsByClassName("grid-container justified-gallery")[0].style.height;
+      pre_divhight =  divhight;
+      s=document.getElementsByClassName("photo_thumbnail jg-entry entry-visible");
+      counterBoard.innerHTML=s.length+countTXT;
+      if(s.length<351) {
+           s=document.getElementsByClassName("scroll_to_top_container"); 
+           if (s.length > 0) { s[0].parentNode.removeChild(s[0]); }
+       }
+      if (s.length>150 && counterBoard.style.zIndex == "20"){
+         for(i=delFrom;i<s.length-150;i++){ s[i].style.display="none"; s[i].childNodes[0].childNodes[1].src="";}  // clear element
+         delFrom=s.length-150;
+      }
+//      if (s.length <6000 ) {document.documentElement.scrollTop=document.documentElement.scrollHeight ;}
+   }
+   divhight =  document.getElementsByClassName("grid-container justified-gallery")[0].style.height;
+ }, 7000);
+}}
+savehref()-> {{
+var hreflist="";
+s=document.getElementsByClassName("photo_link");
+for (i=0 ; i<3; i++) {
+s[i].parentNode.style.borderWidth="3px";
+s[i].parentNode.style.borderStyle ="dotted";
+s[i].parentNode.style.borderColor ="darkgreen";
+hreflist=hreflist+s[i].href+"^"
+}
+// cookie 加存圖片數量於最後
+   s=document.getElementsByClassName("count");
+   if (s.length > 0) {
+     hreflist=hreflist+s[0].innerHTML.replace(",","");
+   }else{ 
+      s=document.getElementsByClassName("sticky_ui__photo_count");  
+      if (s.length > 0) {
+         hreflist=hreflist+s[0].innerHTML.replace(" photos","").replace(",",""); 
+      }
+   }
+cookie_name=window.location.href.replace('https://500px.com/','')+"=";
+//alert(cookie_name);
+document.cookie = cookie_name+hreflist + "; expires=Thu, 18 Dec 2050 12:00:00 UTC";
+//alert(cookie_name+hreflist);
+}}
+loadhrefs()-> {{
+    cookie_name=window.location.href.replace('https://500px.com/','');
+    value=document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + cookie_name.replace(/[-.+*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1");
+//    if (value ==""){
+//    value=document.cookie.replace(/(?:(?:^|.*;\s*)hreflist\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+//    }
+    if (value=="")  {     Status.setMessage('no mark', 2);  return;      }
+    var hrefs = value.split('^');
+    dispText="";
+   s=document.getElementsByClassName("count");
+   if (s.length > 0) {
+     dispText=Number(s[0].innerHTML.replace(",",""))-Number(hrefs[hrefs.length-1]);
+   }else{ 
+      s=document.getElementsByClassName("sticky_ui__photo_count");  
+      if (s.length > 0) {
+         dispText=Number(s[0].innerHTML.replace(" photos","").replace(",",""))-Number(hrefs[hrefs.length-1]); 
+      }
+   }
+    Status.setMessage(dispText + " photos added.", 2);
+    if (isNaN(dispText))  {dispText=0;}
+//    if(!document.getElementById("counterBoard")) {alert("done");test();}
+    document.getElementById("counterBoard").style.zIndex="30";
+     var hrefFound=-1;
+     var prelength=0;
+     var loadedImages=0;
+     s=document.getElementsByClassName("photo_link");
+     runSleep(4000,s);
+     
+async function runSleep(delay,s) {
+     while (prelength < s.length && dispText > loadedImages-51) {
+         prelength=s.length ;
+         for (i=0; i<s.length; i++) {
+           if (hrefs.indexOf(s[i].href) >= 0) {
+              s[i].parentNode.style.borderWidth="3px";
+              s[i].parentNode.style.borderStyle ="dashed";
+              s[i].parentNode.style.borderColor ="darkred";
+              s[i].scrollIntoView();
+              hrefFound=i;
+           }
+         }
+         if (hrefFound >0) {s[hrefFound].scrollIntoView();return;} 
+         
+         loadedImages=counterBoard.innerHTML.split('/')[0];
+         window.scrollTo(0,document.body.scrollHeight);
+         await sleep(delay);
+         s=document.getElementsByClassName("photo_link");
+      }
+}
+async function sleep(ms = 0) {
+return new Promise(r => setTimeout(r, ms));
+}
+}}
+clearElement()-> {{
+function test(){
+alert("done");
+}
+}}
+map 7 :call clearElement<CR>
+map 2 :call countphotos_auto<CR>
+map 0 :call countphotos_auto<CR>
+map _ :call savehref<CR>
+map - :call loadhrefs<CR>
+map 1 :call expandPage<CR>
+call changeScrollColor(7000)
+call countphotos_auto
+}
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+site '*://*/w.io.html' {
+unmapAll
+"test()-> {{
+"//document.write('<scr'+'ipt type="text/javascript"> alert("123");</sc'+'ript>');
+"//var script = document.createElement("script");
+"//script.innerHTML = "function sizeH(value) {	document.getElementById('wormFrame').height = "//Number(document.getElementById('wormFrame').height)+Number(value);alert(state);}";
+"//document.head.appendChild(script);
+"}}
+}
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+site '*://wormate.io/*' {
+unmapAll
+"callParent(keyCode)-> {{
+"parent.postMessage(keyCode, "*");
+"}}
+"enableZoom()-> {{
+"function setsize(x){
+"            x.style.height="2000px";	
+"            x.style.width="4000px";
+"}
+"//script.innerHTML = "$('window').css('transform', 'scale('10')');";
+"//script.innerHTML = "document.body.style.zoom = '50%';";
+"////document.getElementById("game-view").style.transform = "scale(1, 1)";
+"////document.getElementById("game-wrap").style.transform = "scale(2, 2)";
+"////document.getElementById("game-cont").style.transform = "scale(0.5, 0.5)";
+"////document.getElementById("results-view").style.transform = "scale(2)";
+"//document.getElementById("stretch-box").style.transform = "scale(2)";
+"//game-canvas//game-view//game-cont//game-wrap
+"var x=document.getElementById("game-canvas");
+"x.style.transform = "scale(0.5,0.5)";
+"//            x.height="2000px";	
+"//            x.width="4000px";
+"//var x=document.getElementById("game-view");
+"//setsize(document.getElementById("game-canvas"));
+"//setsize(document.getElementById("game-view"));
+"//setsize(document.getElementById("game-cont"));
+"//setsize(document.getElementById("game-wrap"));
+"	
+"}}
+clearZoom()-> {{
+"alert("clear");
+"var script = document.createElement("script");
+"script.innerHTML = "$(window).resize(function() {});";
+"document.head.appendChild(script);
+	
+"}}
+"map w :call callParent(119)<CR>
+"map s :call callParent(115)<CR>
+"map a :call callParent(97)<CR>
+"map d :call callParent(100)<CR>
+"map ` :call callParent(32)<CR>
+"map q :call callParent(32)<CR>
+"map 1 :call callParent(49)<CR>
+"map 2 :call callParent(50)<CR>
+"map 3 :call enableZoom<CR>
+"call clearZoom
+"map 4 :call reload<CR>
+}
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+site '*://*.cwb.gov.tw/*' {
+test1()-> {{
+//if (window.location.href.indexOf("cwb.gov.tw") < 0 ) {return;}
+function replaceImage(img,newsrc) {
+            img.src = newsrc;
+            img.style.height="45px";		
+            img.style.width="45px";	
+     }
+    var images = document.getElementsByTagName('img');
+    for(var i = 0; i < images.length; i++)
+    {
+        var img = images[i];
+        if(img.src == "https://www.cwb.gov.tw/V7/symbol/weather/gif/day/02.gif" || img.src =="https://www.cwb.gov.tw/V7/symbol/weather/gif/night/02.gif")
+         { replaceImage(img,"https://ssl.gstatic.com/onebox/weather/48/cloudy.png");  }
+        if(img.src == "https://www.cwb.gov.tw/V7/symbol/weather/gif/night/08.gif")
+         { replaceImage(img,"https://ssl.gstatic.com/onebox/weather/48/partly_cloudy.png");  }
+        if(img.src == "https://www.cwb.gov.tw/V7/symbol/weather/gif/day/01.gif")
+         { replaceImage(img,"https://ssl.gstatic.com/onebox/weather/48/sunny.png");  }
+    }
+}}
+map l :call test1<CR>
+}
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+site '*://*.atmovies.com.tw/*' {
+searchMovie()-> {{
+//有選擇內容則另開視窗查詢之
+s=window.getSelection().toString();
+if (s != "") { 
+   var win = window.open("http://www.atmovies.com.tw/home/?searchMovie="+encodeURI(s), '_blank');
+   return;
+} 
+//沒選擇內容時則用內建搜尋框搜尋
+s=document.getElementsByClassName("searchFormBlock"); 
+if (s.length >0) {
+   s[0].style.display="block";
+}
+targetField=document.getElementById("search-field");
+targetField.focus();
+targetField.value="";
+document.execCommand("Paste");
+document.getElementsByClassName("search_submit")[0].click(); 
+}}
+doSearchAuto1()-> {{
+var url = new URL(window.location);
+searchTerm=url.searchParams.get("searchMovie");
+if ( searchTerm == null ) {return};
+document.getElementById('search-field').value=searchTerm;
+document.getElementsByClassName("search_submit")[0].click(); 
+}}
+map e :call searchMovie<CR>
+call doSearchAuto1
+"map 7 :call doSearchAuto1<CR>
+}
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+site '*://*dictionary.cambridge.*' {
+set noautofocus
+test1()-> {{
+//有選擇內容則另開視窗查詢之
+s=window.getSelection().toString();
+if (s != "") { 
+   var win = window.open("https://dictionary.cambridge.org/zht/詞典/英語-漢語-繁體/"+encodeURI(s), '_blank');
+   return;
+} 
+//沒選擇內容時則按下發音按鈕
+var s=document.getElementsByClassName("audio_play_button"); 
+    for(var i = 0; i < s.length; i++)
+    {
+         if (s[i].title.indexOf("American pronunciation") > 0) {
+            s[i].click();
+            return;
+          }
+    }
+s[0].click();  // 沒American pronunciation則按第一個聲音鈕
+}}
+map t :call test1<CR>
+}
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+fullScreen -> {{
+  if (!document.fullscreenElement) { 
+      document.documentElement.requestFullscreen();
+  } else {  
+      document.exitFullscreen(); 
+  }
+}}
+changeScrollColor(delay)-> {{
+var scollcolor=function(){ 
+   if (document.styleSheets[0].cssRules[0].style.cssText != "box-shadow: rgb(50, 50, 50) 20px 0px 0px inset;")
+   {
+      document.styleSheets[0].insertRule('::-webkit-scrollbar {overflow:visible;}',0);
+      document.styleSheets[0].insertRule('::-webkit-scrollbar-thumb {box-shadow:inset 20px 0 0 rgba(100,100,100,1);',0);
+      document.styleSheets[0].insertRule('::-webkit-scrollbar {box-shadow:inset 20px 0 0 rgba(50,50,50,1);}',0);
+   }
+}
+async function sleep(ms = 0) {
+return new Promise(r => setTimeout(r, ms));
+}
+async function run() {
+await sleep(delay);
+scollcolor();
+}
+run();
+}}
+savePosition() ->{{
+    cname="scrollTop";
+    cvalue=document.documentElement.scrollTop;
+    exdays=14;
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires;
+    Status.setMessage('savePosition...'+cvalue, 2);
+}}
+getPosition() -> {{
+    async function sleep(ms = 0) {
+        return new Promise(r => setTimeout(r, ms));
+    }
+    async function run(position) {
+            document.documentElement.scrollTop=position;
+            sleeptime=1000;
+            preposition="";
+            nowposition=document.documentElement.scrollTop;
+            while(document.documentElement.scrollTop != position){
+                Status.setMessage('準備繼續捲動...'+sleeptime, 2);
+                sleeptime=sleeptime+100;
+                if (preposition==nowposition) {
+                      sleeptime=sleeptime+1000;
+                } else {
+                      preposition=nowposition;
+                }
+                await sleep(sleeptime);
+                document.documentElement.scrollTop=position;
+                nowposition=document.documentElement.scrollTop;
+            }
+}
+    positionGet=document.cookie.replace(/(?:(?:^|.*;\s*)scrollTop\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    if (positionGet=="") {Status.setMessage('no mark', 2);  return;}
+    run(positionGet);
+}}
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+searchSites(url)-> {{
+s=window.getSelection().toString();
+if (s != "") { 
+   var win = window.open(url+encodeURI(s), '_blank');
+   return;
+} 
+var input= document.createElement('input'); 
+input.type = "text"; 
+input.id = "tempSearch"; 
+var tempSearch=document.getElementById("tempSearch");
+if (tempSearch == null) {document.body.prepend(input); tempSearch=document.getElementById("tempSearch");}
+else {tempSearch.style.display=""; tempSearch.value="";}
+document.getElementById("tempSearch").focus();
+document.execCommand("Paste");
+document.getElementById("tempSearch").style.display="none";
+var win = window.open(url+encodeURI(tempSearch.value), '_blank');
+}}
+map t :call searchSites("https://dictionary.cambridge.org/zht/詞典/英語-漢語-繁體/")<CR>
+map y :call searchSites("https://www.youtube.com/results?search_query=")<CR>
+map e :call searchSites("http://www.atmovies.com.tw/home/?searchMovie=")<CR>
+"map c :call searchSites("https://www.google.com/search?q=")<CR>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+goFeedList-> {{
+var input= document.createElement('input'); 
+input.type = "text"; 
+input.id = "tempSearch"; 
+var tempSearch=document.getElementById("tempSearch");
+if (tempSearch == null) {document.body.prepend(input); tempSearch=document.getElementById("tempSearch");}
+else {tempSearch.style.display=""; tempSearch.value="";}
+document.getElementById("tempSearch").focus();
+document.execCommand("Paste");
+document.getElementById("tempSearch").style.display="none";
+tempSearch.value=encodeURI(tempSearch.value);
+if (tempSearch.value.indexOf('feeds/videos.xml')>=0) {
+tempSearch.value=tempSearch.value.replace('feeds/videos.xml?playlist_id','playlist?list');
+} else if (tempSearch.value.indexOf('http://')>=0 || tempSearch.value.indexOf('https://')>=0){
+}
+else{
+tempSearch.value="https://www.google.com/search?q="+tempSearch.value;
+}
+var win = window.open(tempSearch.value, '_blank');
+}}
+map 3 :call goFeedList<CR>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map ` :call fullScreen<CR>
+map 2 :call changeScrollColor(100)<CR>
+map + :call savePosition<CR>
+map = :call getPosition<CR>
+let blacklists = ["https://wormate.io/*","https://www.megabank.com.tw/*","https://ebank.megabank.com.tw/*","https://netbank.megabank.com.tw/*"]
